@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Plan renovation costs, compare purchases, and test furnishing scenarios." />
+  <meta name="theme-color" content="#2b4038" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Hearthplan" />
+  <title>Renovation & Furnishing Planner</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%232a3b35'/%3E%3Cpath d='M7 16.5 16 9l9 7.5V25h-7v-6h-4v6H7z' fill='%23f3b55f'/%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css?v=5" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">⌂</div>
+        <div><strong>Hearthplan</strong><span>Renovation planner</span></div>
+      </div>
+      <nav id="main-nav">
+        <button class="nav-item active" data-view="dashboard"><span>▦</span> Dashboard</button>
+        <button class="nav-item" data-view="budget"><span>◫</span> Budget Tracker</button>
+        <button class="nav-item" data-view="shopping"><span>◇</span> Shopping Comparator</button>
+        <button class="nav-item" data-view="scenarios"><span>⇄</span> Scenario Comparator</button>
+        <button class="nav-item" data-view="settings"><span>⚙</span> Settings</button>
+      </nav>
+      <div class="sidebar-foot">
+        <span>Saved on this device</span>
+        <button id="reset-data" class="text-button">Reset sample data</button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <button id="menu-button" class="icon-button menu-button" aria-label="Open navigation">☰</button>
+        <div><p class="eyebrow" id="section-kicker">YOUR HOME, AT A GLANCE</p><h1 id="page-title">Dashboard</h1></div>
+        <div class="project-chip"><span class="status-dot"></span> My Home <small>Active plan</small></div>
+      </header>
+
+      <section id="dashboard" class="view active" aria-labelledby="page-title">
+        <div class="budget-hero">
+          <div>
+            <p class="eyebrow">TOTAL PROJECT BUDGET</p>
+            <div class="editable-total"><span id="total-budget-display">RM 0</span><button id="edit-budget" class="icon-button" aria-label="Edit total budget">✎</button></div>
+            <p class="muted">Your working limit across renovation, furnishings, and appliances.</p>
+          </div>
+          <div class="budget-ring" id="budget-ring"><div><strong id="budget-percent">0%</strong><span>allocated</span></div></div>
+        </div>
+        <div class="metric-grid" id="metric-grid"></div>
+        <div class="dashboard-grid">
+          <article class="panel category-panel">
+            <div class="panel-head"><div><p class="eyebrow">COST BREAKDOWN</p><h2>Spending by category</h2></div><span class="legend"><i></i> Current estimate</span></div>
+            <div id="category-bars" class="category-bars"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><p class="eyebrow">NEXT STEPS</p><h2>Project pulse</h2></div></div>
+            <div id="project-pulse" class="pulse-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="budget" class="view" aria-labelledby="page-title">
+        <div class="section-actions"><div><p class="section-intro">Track every planned and committed cost. Actuals and payments roll into the dashboard.</p></div><button class="primary-button" id="add-expense">＋ Add expense</button></div>
+        <div class="summary-strip" id="budget-summary"></div>
+        <article class="panel table-panel"><div class="table-toolbar"><label class="search-box">⌕<input id="expense-search" type="search" placeholder="Search items, rooms or sellers" /></label><select id="expense-category-filter"><option value="">All categories</option></select></div><div class="table-wrap"><table><thead><tr><th>Item</th><th>Category / Room</th><th>Budget</th><th>Estimate</th><th>Actual</th><th>Paid</th><th>Variance</th><th>Outstanding</th><th>Status</th><th></th></tr></thead><tbody id="expense-table"></tbody></table></div></article>
+      </section>
+
+      <section id="shopping" class="view" aria-labelledby="page-title">
+        <div class="section-actions"><div><p class="section-intro">Compare products freely. Nothing here affects your budget until you confirm a purchase.</p></div><button class="primary-button" id="add-product">＋ Add product option</button></div>
+        <div class="summary-strip" id="shopping-summary"></div>
+        <article class="panel table-panel"><div class="table-toolbar"><label class="search-box">⌕<input id="product-search" type="search" placeholder="Search products or sellers" /></label><label class="toggle-label"><input id="shortlist-filter" type="checkbox" /> Shortlisted only</label></div><div class="table-wrap"><table><thead><tr><th>Product</th><th>Seller</th><th>Price</th><th>Shipping + fees</th><th>Landed cost</th><th>Dimensions</th><th>Score</th><th>Shortlist</th><th></th></tr></thead><tbody id="product-table"></tbody></table></div></article>
+      </section>
+
+      <section id="scenarios" class="view" aria-labelledby="page-title">
+        <div class="section-actions"><div><p class="section-intro">Mix shortlisted ideas into plans without changing your committed renovation budget.</p></div><button class="primary-button" id="add-scenario">＋ New scenario</button></div>
+        <div id="scenario-comparison" class="scenario-grid"></div>
+        <article class="panel comparison-panel"><div class="panel-head"><div><p class="eyebrow">SIDE-BY-SIDE</p><h2>Scenario comparison</h2></div><select id="scenario-baseline" aria-label="Comparison baseline"></select></div><div class="table-wrap"><table><thead><tr><th>Scenario</th><th>Items</th><th>Total</th><th>Difference</th><th>Top category</th></tr></thead><tbody id="scenario-table"></tbody></table></div></article>
+      </section>
+
+      <section id="settings" class="view" aria-labelledby="page-title">
+        <div class="section-actions"><div><p class="section-intro">Download spreadsheet-ready records or keep a complete restorable copy of your planner.</p></div></div>
+        <div class="settings-layout">
+          <article class="panel backup-panel">
+            <div class="panel-head"><div><p class="eyebrow">EXPORT / BACKUP</p><h2>Export your planner</h2></div><span class="backup-status">Stored on this device</span></div>
+            <div class="export-list">
+              <div class="export-row"><div class="export-icon" aria-hidden="true">▤</div><div><strong>Budget Tracker</strong><span>Expenses, costs, payments, variance and outstanding amounts.</span></div><button class="secondary-button" id="export-budget-csv">Export CSV</button></div>
+              <div class="export-row"><div class="export-icon" aria-hidden="true">◇</div><div><strong>Shopping Comparator</strong><span>Product options, sellers, landed costs, scores and shortlist status.</span></div><button class="secondary-button" id="export-shopping-csv">Export CSV</button></div>
+              <div class="export-row"><div class="export-icon" aria-hidden="true">⇄</div><div><strong>Scenario Comparator</strong><span>Scenario totals and each included product option.</span></div><button class="secondary-button" id="export-scenarios-csv">Export CSV</button></div>
+            </div>
+            <div class="backup-callout">
+              <div><p class="eyebrow">COMPLETE JSON BACKUP</p><h3>Everything in one file</h3><p>Includes app settings, categories, budget items, shopping options, scenarios, notes, and custom data.</p></div>
+              <button class="primary-button" id="export-all-data">Export All Data</button>
+            </div>
+          </article>
+
+          <article class="panel restore-panel">
+            <div class="panel-head"><div><p class="eyebrow">RESTORE</p><h2>Import a backup</h2></div></div>
+            <div class="restore-content">
+              <div class="warning-box"><strong>Existing data will be replaced</strong><p>You’ll see a final confirmation before anything changes. Consider exporting a fresh backup first.</p></div>
+              <label class="file-drop" for="backup-file"><span class="file-drop-icon">⇧</span><strong>Choose a JSON backup file</strong><span id="backup-file-name">Only renovation planner .json backups are accepted</span></label>
+              <input id="backup-file" class="visually-hidden" type="file" accept="application/json,.json" />
+              <button class="secondary-button import-button" id="import-backup" disabled>Import and Restore</button>
+              <p class="restore-note" id="restore-note">No file selected.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="expense-dialog"><form method="dialog" id="expense-form"><div class="dialog-head"><div><p class="eyebrow">BUDGET TRACKER</p><h2 id="expense-dialog-title">Add expense</h2></div><button class="icon-button" value="cancel" formnovalidate aria-label="Close">×</button></div><input type="hidden" name="id" /><div class="form-grid"><label class="wide">Item name<input name="name" required /></label><label>Category<select name="category" required></select></label><label>Sub-category<input name="subcategory" /></label><label>Room / area<input name="room" /></label><label>Seller / contractor<input name="seller" /></label><label>Budget amount (RM)<input name="budget" type="number" min="0" step="0.01" /></label><label>Estimated cost (RM)<input name="estimated" type="number" min="0" step="0.01" /></label><label>Actual cost (RM)<input name="actual" type="number" min="0" step="0.01" /></label><label>Amount paid (RM)<input name="paid" type="number" min="0" step="0.01" /></label><label>Status<select name="status" required></select></label><label class="wide">Notes<textarea name="notes" rows="3"></textarea></label></div><div class="dialog-actions"><button value="cancel" class="secondary-button" formnovalidate>Cancel</button><button value="default" class="primary-button">Save expense</button></div></form></dialog>
+
+  <dialog id="product-dialog"><form method="dialog" id="product-form"><div class="dialog-head"><div><p class="eyebrow">SHOPPING COMPARATOR</p><h2 id="product-dialog-title">Add product option</h2></div><button class="icon-button" value="cancel" formnovalidate aria-label="Close">×</button></div><input type="hidden" name="id" /><div class="form-grid"><label>Product name<input name="productName" required /></label><label>Product category<select name="category" required></select></label><label>Option name<input name="optionName" required /></label><label>Seller / platform<input name="seller" /></label><label>Product price (RM)<input name="price" type="number" min="0" step="0.01" required /></label><label>Shipping cost (RM)<input name="shipping" type="number" min="0" step="0.01" /></label><label>Other fees (RM)<input name="fees" type="number" min="0" step="0.01" /></label><label>Size / dimensions<input name="dimensions" /></label><label>Product link<input name="link" type="url" placeholder="https://" /></label><label>Personal score (1–10)<input name="rating" type="number" min="1" max="10" step="0.5" /></label><label class="check-field"><input name="shortlisted" type="checkbox" /> Shortlisted</label><label class="wide">Notes<textarea name="notes" rows="3"></textarea></label></div><div class="live-total">Total landed cost <strong id="live-landed-cost">RM 0.00</strong></div><div class="dialog-actions"><button value="cancel" class="secondary-button" formnovalidate>Cancel</button><button value="default" class="primary-button">Save option</button></div></form></dialog>
+
+  <dialog id="scenario-dialog"><form method="dialog" id="scenario-form"><div class="dialog-head"><div><p class="eyebrow">SCENARIO COMPARATOR</p><h2 id="scenario-dialog-title">Create scenario</h2></div><button class="icon-button" value="cancel" formnovalidate aria-label="Close">×</button></div><input type="hidden" name="id" /><label>Scenario name<input name="name" required placeholder="e.g. Balanced & practical" /></label><fieldset><legend>Choose product options</legend><div id="scenario-product-options" class="product-picks"></div></fieldset><div class="dialog-actions"><button value="cancel" class="secondary-button" formnovalidate>Cancel</button><button value="default" class="primary-button">Save scenario</button></div></form></dialog>
+
+  <dialog id="budget-dialog" class="small-dialog"><form method="dialog" id="budget-form"><div class="dialog-head"><div><p class="eyebrow">PROJECT SETTING</p><h2>Edit total budget</h2></div><button class="icon-button" value="cancel" formnovalidate aria-label="Close">×</button></div><label>Total budget (RM)<input name="totalBudget" type="number" min="0" step="100" required /></label><div class="dialog-actions"><button value="cancel" class="secondary-button" formnovalidate>Cancel</button><button value="default" class="primary-button">Update budget</button></div></form></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="portability.js?v=1"></script>
+  <script src="app.js?v=6"></script>
+  <script src="pwa.js?v=1"></script>
+</body>
+</html>
